@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Colorings;
@@ -17,6 +18,10 @@ import frc.robot.subsystems.DriveTrain;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+
 
 
 /**
@@ -38,6 +43,7 @@ public class Robot extends TimedRobot
   {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    
     m_robotContainer = new RobotContainer(); 
     m_Colorings = new Colorings();
     m_Colorings.setColorTargets();
@@ -146,6 +152,7 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit() 
  {
+ 
      ahrs.zeroYaw();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -157,7 +164,23 @@ public class Robot extends TimedRobot
 
   @Override
   public void autonomousPeriodic()
-  { }
+  { 
+  
+  if (m_driveTrain != null && m_driveTrain.m_odometry != null){
+  SmartDashboard.putBoolean("statustrue", m_driveTrain != null);
+    SmartDashboard.putNumber("PosX", m_driveTrain.m_odometry.getPoseMeters().getTranslation().getX());
+   SmartDashboard.putNumber("PosY", m_driveTrain.m_odometry.getPoseMeters().getTranslation().getY());
+   
+
+  }
+  else {
+    SmartDashboard.putBoolean("statusfalse,", m_driveTrain != null);
+
+    if (m_driveTrain != null && m_driveTrain.m_odometry == null){
+      m_driveTrain.m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(m_driveTrain.getHeading()));
+    }
+  }
+  }
 
   @Override
   public void teleopInit() 

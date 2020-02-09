@@ -56,7 +56,7 @@ public class DriveTrain extends SubsystemBase
   final public DifferentialDrive m_dDrive = new DifferentialDrive(m_Left, m_Right);
 /**---------------------------------------------------------------------------------------------- */
 
-  private final DifferentialDriveOdometry m_odometry;
+  public DifferentialDriveOdometry m_odometry;
 
   public DriveTrain()
   {
@@ -142,6 +142,8 @@ public class DriveTrain extends SubsystemBase
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) 
   {
+    SmartDashboard.putNumber("PosX", m_odometry.getPoseMeters().getTranslation().getX());
+    SmartDashboard.putNumber("PosY", m_odometry.getPoseMeters().getTranslation().getY());
     m_Left.setVoltage(-leftVolts);
     m_Right.setVoltage(rightVolts);
     m_dDrive.feed();
