@@ -10,7 +10,6 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -143,7 +142,7 @@ public class RobotContainer
     // An example trajectory to follow.  All units in meters.
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
       // Start at the origin facing the +X direction
-      new Pose2d(0, 0, new Rotation2d(0)),
+      new Pose2d(0, 0, new Rotation2d(-180)),
       // Pass through these two interior waypoints, making an 's' curve path
       List.of(
         new Translation2d(1, 1),
