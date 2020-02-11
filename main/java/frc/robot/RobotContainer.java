@@ -9,7 +9,6 @@ package frc.robot;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -156,7 +155,7 @@ public class RobotContainer
     String trajectoryJSON = "paths/Trenchrun.wpilib.json";
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/paths/Trenchrun.wpilib.json"));
+      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
       SmartDashboard.putBoolean("haspathbeenfound", true);
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
@@ -164,7 +163,7 @@ public class RobotContainer
     }
 
     RamseteCommand ramseteCommand = new RamseteCommand(
-      trajectory,
+      exampleTrajectory,
       m_driveTrain::getPose,
       new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
       new SimpleMotorFeedforward(Constants.ksVolts,
