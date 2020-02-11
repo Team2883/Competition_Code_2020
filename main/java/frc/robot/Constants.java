@@ -42,9 +42,9 @@ public final class Constants
     //Chassis Motors
     public static final int PigeonSRX = 14;
     public static final int LeftFront = 1;
-    public static final int LeftBack = 0;
+    public static final int LeftBack = 2;
     public static final int RightFront = 3;
-    public static final int RightBack = 2;
+    public static final int RightBack = 4;
 
     //Other Motors
     public static final int Agitate = 0;

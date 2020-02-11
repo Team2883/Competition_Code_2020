@@ -20,7 +20,7 @@ public class Harvester extends SubsystemBase
   final public WPI_TalonSRX m_Harvester = new WPI_TalonSRX(Constants.HarvesterMotor);
   final public WPI_TalonSRX m_kick = new WPI_TalonSRX(Constants.BottomKickMotor);
   final public WPI_TalonSRX m_agitate = new WPI_TalonSRX(Constants.Agitate);
-  private final Solenoid HarvestSolenoid = new Solenoid(Constants.Harvestsolenoid);
+  //private final Solenoid HarvestSolenoid = new Solenoid(Constants.Harvestsolenoid);
   public boolean done = false;
   public boolean  Harvesting = false;
   public boolean  In = false;
@@ -54,10 +54,10 @@ public class Harvester extends SubsystemBase
   
   public void HarvestSolenoid() 
   {
-    if (In)
-      HarvestSolenoid.set(false);
-    else
-      HarvestSolenoid.set(true);
+    // if (In)
+    //   HarvestSolenoid.set(false);
+    // else
+    //   HarvestSolenoid.set(true);
 
     In = !In;
     done = true;
