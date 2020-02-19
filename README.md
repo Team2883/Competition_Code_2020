@@ -11,8 +11,10 @@
 /* Commands */
 
 Autos
-                
-    AutoTurret.java - command to center the turret during Autonomous
+          
+    Auto1.java - commandGroup used for complex autonomous (currently twitchy)
+    
+    TurretAuto.java - command to center the turret during Autonomous
 
 Colors
                 
