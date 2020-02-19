@@ -25,8 +25,13 @@ public class Harvest extends CommandBase
     @Override
     public void initialize()
     {
-        m_Harvester.Harvest();
+        m_Harvester.Harvest(0.45);
     }
+    @Override
+    public void execute() 
+    {
+        
+     }
 
     @Override
     public boolean isFinished() 

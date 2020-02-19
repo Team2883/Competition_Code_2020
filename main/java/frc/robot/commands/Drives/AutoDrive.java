@@ -8,43 +8,59 @@
 package frc.robot.commands.Drives;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
+import frc.robot.subsystems.DriveTrain;
 
 
 public class AutoDrive extends CommandBase 
 {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+  private final DriveTrain m_drive;
+  private final double m_distance;
+  private final double m_speed;
+  double diameter = 6; // 6 inch wheel
+  double gearRatio = 28.5; // 26:1 gearbox
+  double distR = (2048 / (diameter * 3.14 / gearRatio) );
   
-  double driveSpeed = 0;
-  double driveRotation = 0;
-  
-  public AutoDrive(double speed, double rotation) 
+  /**
+   * Creates a new DriveDistance.
+   *
+   * @param inches The number of inches the robot will drive
+   * @param speed The speed at which the robot will drive
+   * @param drive The drive subsystem on which this command will run
+   */
+  public AutoDrive(double inches, double speed, DriveTrain drive) 
   {
-    driveSpeed = speed;
-    driveRotation = rotation;
+    m_distance = inches;
+    m_speed = speed;
+    m_drive = drive;
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() 
-  { }
+  {
+    m_drive.resetEncoders();
+    m_drive.DriveAuto(0, 0);
+  }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() 
-  { }
+  public void execute()
+  {
+    m_drive.DriveAuto(m_speed, 0);
+  }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) 
   {
-    Robot.m_driveTrain.m_dDrive.tankDrive(0, 0);
+    m_drive.DriveAuto(0, 0);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() 
   {
-    return false;
+    if(m_distance > 0)
+      return Math.abs(m_drive.getRightEncoder() / distR) >= m_distance;
+    else if(m_distance < 0)
+      return Math.abs(m_drive.getRightEncoder()/ distR) <= m_distance;
+    else 
+      return false;
   }
 }

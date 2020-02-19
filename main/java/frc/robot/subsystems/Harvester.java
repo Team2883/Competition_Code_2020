@@ -8,7 +8,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,49 +20,36 @@ public class Harvester extends SubsystemBase
   private static final Command Harvest = null;
   final public WPI_TalonSRX m_Harvester = new WPI_TalonSRX(Constants.HarvesterMotor);
   final public WPI_TalonSRX m_kick = new WPI_TalonSRX(Constants.BottomKickMotor);
-  final public WPI_TalonSRX m_agitate = new WPI_TalonSRX(Constants.Agitate);
-  //private final Solenoid HarvestSolenoid = new Solenoid(Constants.Harvestsolenoid);
+  private final DoubleSolenoid HarvestSoloenoid = new DoubleSolenoid(Constants.Harvestsolenoid1, Constants.Harvestsolenoid2);
   public boolean done = false;
   public boolean  Harvesting = false;
   public boolean  In = false;
   boolean Done = false;
   boolean bottomKick = false;
-  boolean Agitating = false;
+  boolean bottomKickReverse = false;
+ 
 
-  public void Agitate() 
+
+  public void Harvest(double speed) 
   {
-    if (Agitating)
-      m_agitate.set(0);
-    else
-      m_agitate.set(1);
-
-    Agitating = !Agitating;
-    done = true;
-    isFinished();
+   m_Harvester.set(speed);
+  }
+  public void HarvesterReverse(double speed) 
+  {
+   m_Harvester.set(speed);
   }
 
-  public void Harvest() 
+  public void HarvestStop() 
   {
-    if (Harvesting)
-      m_Harvester.set(0);
-    else
-      m_Harvester.set(-1);
-
-    Harvesting = !Harvesting;
-    done = true;
-    isFinished();
+   m_Harvester.set(0);
   }
-  
-  public void HarvestSolenoid() 
-  {
-    // if (In)
-    //   HarvestSolenoid.set(false);
-    // else
-    //   HarvestSolenoid.set(true);
 
-    In = !In;
-    done = true;
-    isFinished();
+  public void HarvestSolenoid(boolean Raise) 
+  {
+    if (Raise)
+      HarvestSoloenoid.set(Value.kReverse);
+    else
+      HarvestSoloenoid.set(Value.kForward);
   }
   
   public void bottomKick() 
@@ -69,8 +57,19 @@ public class Harvester extends SubsystemBase
     if (bottomKick)
       m_kick.set(0);
     else
-      m_kick.set(1);
-
+      m_kick.set(.5);
+      
+    bottomKick = !bottomKick;
+    done = true;
+    isFinished();
+  }
+  public void bottomKickReverse() 
+  {
+    if (bottomKickReverse)
+      m_kick.set(0);
+    else
+      m_kick.set(-.5);
+      
     bottomKick = !bottomKick;
     done = true;
     isFinished();

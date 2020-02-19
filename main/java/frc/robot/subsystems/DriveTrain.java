@@ -34,9 +34,9 @@ public class DriveTrain extends SubsystemBase
   boolean done = false;
 
   //Encoder Values
-  double diameter = 6; // 6 inch sprocket
-  double gearRatio = 28.5; //26:1 gearbox
-  double distR = (2048 / (diameter * 3.14 / gearRatio) );   // pulse per inch
+  double diameter = 6; // 6 inch wheel
+  double gearRatio = 28.5; // 26:1 gearbox
+  double distR = (2048 / (diameter * 3.14 / gearRatio) ); // pulse per inch
   double distL = -distR;   // pulse per inch
 
   //Drivetrain
@@ -69,7 +69,7 @@ public class DriveTrain extends SubsystemBase
   @Override
   public void periodic()
   {
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), LeftBack.getSelectedSensorPosition()/ distL * 0.0254,
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), LeftBack.getSelectedSensorPosition() / distL * 0.0254,
     RightBack.getSelectedSensorPosition() / distR * 0.0254);
     
     SmartDashboard.putNumber("Left Falcon Encoder", LeftBack.getSelectedSensorPosition() / distL);
@@ -79,7 +79,11 @@ public class DriveTrain extends SubsystemBase
   
   public void Drive(double speed, double rotation)
   {
-    m_dDrive.arcadeDrive(speed, rotation * sensitivity);
+    m_dDrive.arcadeDrive(speed, rotation);
+  }
+  public void DriveAuto(double speed, double rotation)
+  {
+    m_dDrive.arcadeDrive(speed, rotation);
   }
 
   public void Shifting()
@@ -162,7 +166,7 @@ public static void AddSensitivity(double sens)
   // Returns the current wheel speeds of the robot.
   public DifferentialDriveWheelSpeeds getWheelSpeeds() 
   {
-    return new DifferentialDriveWheelSpeeds(LeftBack.getSelectedSensorVelocity() / distL * 0.0254, RightBack.getSelectedSensorVelocity() / distR * 0.0254);
+    return new DifferentialDriveWheelSpeeds(LeftBack.getSelectedSensorVelocity() / distL, RightBack.getSelectedSensorVelocity() / distR);
   }
 
   // Resets the odometry to the specified pose.

@@ -24,32 +24,37 @@ public final class Constants
 {
     //Controller One Inputs
     public static final int XboxPort = 0;
-    public static final int AutoTurnButton = 3; // X Button
-    public static final int ColorwheelButton = 10; // Right Stick
-    public static final int Harvest = 7; // Back Button
-    public static final int HighShootButton = 4; // Y Button
-    public static final int KickButton = 1;
-    public static final int LowerSensButton = 5; // Left Bumper
-    public static final int LowShootButton = 8; // Start Button
-    public static final int RaiseSensButton = 6; // Right Bumper
-   // public static final int ShifterButton = 1; // A Button
-    
+    public static final int Harvest = 1; // A Button
+    public static final int HarvestSolenoid = 6; // Right Bumper
+    public static final int Hoodsolenoid = 8;   //  Right Bumper
+    public static final int ShifterButton = 10; // Right Stick
+    public static final int ClimbSolenoidButton = 5; // Left bumper
+    public static final int ClimbReverseButton = 2;
+    public static final int TurretSolenoidButton = 7;
+
     //Controller Two Inputs
     public static final int XboxPort1 = 1;
-    public static final int Colored = 1; //A Button
-    public static final int HoodSolenoidButton = 7; // Back Button
+    public static final int Colored = 9; // X Button
+    public static final int LowShootButton = 7; //  Start Button
+    public static final int LowerSensButton = 5; // Left Bumper
+    public static final int RaiseSensButton = 6; // Right Bumper
+    public static final int Agitator = 1;   //  A Button
+    public static final int KickButton = 2; //  B Button
+    public static final int AutoTurnButton = 3; // y Button
+    public static final int HighShootButton = 4;
+    public static final int ReverseAgitate = 10; // y Button
 
     //Chassis Motors
     public static final int PigeonSRX = 14;
     public static final int LeftFront = 1;
-    public static final int LeftBack = 2;
+    public static final int LeftBack = 0;
     public static final int RightFront = 3;
-    public static final int RightBack = 4;
+    public static final int RightBack = 2;
 
     //Other Motors
-    public static final int Agitate = 0;
+    public static final int Agitate = 12;
     public static final int BottomKickMotor = 18;
-    public static final int ClimbMotor = 0;
+    public static final int ClimbMotor = 4;
     public static final int ColorwheelMotor = 14;
     public static final int HarvesterMotor = 15;
     public static final int ShooterMotor = 17;
@@ -59,17 +64,24 @@ public final class Constants
     
     //Pneumatics
     public static final int ClimbSolenoid = 0;
-    public static final int GearShift = 7;
-    public static final int HoodSolonoid = 0;
-	public static final int Harvestsolenoid = 0;
+    public static final int ClimbSolenoid1 = 1;
+    public static final int GearShift = 5;
+    public static final int HoodSolenoid = 4;
+    public static final int TurretSolenoid = 7;
+	public static final int Harvestsolenoid1 = 2;
+	public static final int Harvestsolenoid2 = 3;
 
     //Encoder
     public static final int Encoder = 0;
 
+    //Sensors
+    public static final int LeftSwitch = 0;
+    public static final int RightSwitch = 1;
+
     //Autonomous Distance
-    public static final double ksVolts = 0.309;
-    public static final double kvVoltSecondsPerMeter = 0.143;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.00603;
+    public static final double ksVolts = 0.00929;
+    public static final double kvVoltSecondsPerMeter = 5.86;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.357;
 
     // Example value only - as above, this must be tuned for your drive!
     public static final double kPDriveVel = 0.5;
