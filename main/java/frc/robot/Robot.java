@@ -12,13 +12,13 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Sensors.SensorReset;
 import frc.robot.subsystems.Colorings;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Harvester;
 import frc.robot.subsystems.Turret;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
@@ -39,7 +39,6 @@ public class Robot extends TimedRobot
   public static Colorings m_Colorings;
   private Command m_autonomousCommand;
   AHRS ahrs;
-  CameraServer server;
   
   @Override
   public void robotInit()
@@ -51,8 +50,6 @@ public class Robot extends TimedRobot
     m_Colorings.setColorTargets();
     ahrs.enableLogging(true);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-    server = CameraServer.getInstance();
-    server.startAutomaticCapture("cam0",0);
   }
 
   /**
@@ -154,6 +151,7 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    //m_Harvester.m_kick.set(0);
     ahrs.zeroYaw();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) 
@@ -165,7 +163,6 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousPeriodic()
   {
-    CommandScheduler.getInstance().run();
     if (m_driveTrain != null && m_driveTrain.m_odometry != null){
     SmartDashboard.putBoolean("statustrue", m_driveTrain != null);
     SmartDashboard.putNumber("PosX", m_driveTrain.m_odometry.getPoseMeters().getTranslation().getX());
@@ -182,6 +179,12 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit() 
   {
+    
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+    // This makes sure that the autonomous stops running when
+    // teleop starts running. If you want the autonomous to
+    // continue until interrupted by another command, remove
+    // this line or comment it out.
     if (m_autonomousCommand != null) 
     {
       m_autonomousCommand.cancel();

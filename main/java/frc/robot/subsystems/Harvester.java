@@ -20,28 +20,37 @@ public class Harvester extends SubsystemBase
   private static final Command Harvest = null;
   final public WPI_TalonSRX m_Harvester = new WPI_TalonSRX(Constants.HarvesterMotor);
   final public WPI_TalonSRX m_kick = new WPI_TalonSRX(Constants.BottomKickMotor);
+  final public WPI_TalonSRX m_agitate = new WPI_TalonSRX(Constants.Agitate);
   private final DoubleSolenoid HarvestSoloenoid = new DoubleSolenoid(Constants.Harvestsolenoid1, Constants.Harvestsolenoid2);
   public boolean done = false;
   public boolean  Harvesting = false;
   public boolean  In = false;
   boolean Done = false;
   boolean bottomKick = false;
-  boolean bottomKickReverse = false;
- 
+  boolean Agitating = false;
 
-
-  public void Harvest(double speed) 
+  public void Agitate() 
   {
-   m_Harvester.set(speed);
+    if (Agitating)
+      m_agitate.set(0);
+    else
+      m_agitate.set(1);
+
+    Agitating = !Agitating;
+    done = true;
+    isFinished();
   }
-  public void HarvesterReverse(double speed) 
-  {
-   m_Harvester.set(speed);
-  }
 
-  public void HarvestStop() 
+  public void Harvest() 
   {
-   m_Harvester.set(0);
+    if (Harvesting)
+      m_Harvester.set(0);
+    else
+      m_Harvester.set(-.45);
+
+    Harvesting = !Harvesting;
+    done = true;
+    isFinished();
   }
 
   public void HarvestSolenoid(boolean Raise) 
@@ -57,19 +66,8 @@ public class Harvester extends SubsystemBase
     if (bottomKick)
       m_kick.set(0);
     else
-      m_kick.set(.5);
-      
-    bottomKick = !bottomKick;
-    done = true;
-    isFinished();
-  }
-  public void bottomKickReverse() 
-  {
-    if (bottomKickReverse)
-      m_kick.set(0);
-    else
-      m_kick.set(-.5);
-      
+      m_kick.set(1);
+
     bottomKick = !bottomKick;
     done = true;
     isFinished();
