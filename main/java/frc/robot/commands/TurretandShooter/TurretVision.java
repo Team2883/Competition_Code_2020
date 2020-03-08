@@ -7,7 +7,6 @@
 
 package frc.robot.commands.TurretandShooter;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Turret;
 
@@ -15,7 +14,7 @@ import frc.robot.subsystems.Turret;
 public class TurretVision extends CommandBase 
 {
   private final Turret m_turret;
-  
+
   public TurretVision(Turret subsystem) 
   {
     m_turret = subsystem;
@@ -38,15 +37,12 @@ public class TurretVision extends CommandBase
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) 
-  {
-    m_turret.TurretStop();
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-  }
+  { }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() 
   {
-	return false;
+    return false;
   }
 }

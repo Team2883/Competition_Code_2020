@@ -27,9 +27,12 @@ public class Turret extends SubsystemBase
   final public WPI_TalonSRX m_topKick = new WPI_TalonSRX(Constants.TopKickMotor);
   public final SpeedControllerGroup m_Shooter = new SpeedControllerGroup(m_Shooter1, m_Shooter2);
   private final Solenoid HoodSolenoid = new Solenoid(Constants.HoodSolenoid);
-  DigitalInput Magencoder = new DigitalInput(Constants.Encoder);
+  private final Solenoid TurretSolenoid = new Solenoid(Constants.TurretSolenoid);
+  //DigitalInput Magencoder = new DigitalInput(Constants.Encoder);
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightSteerCommand = 0.0;
+  DigitalInput LeftSwitch = new DigitalInput(Constants.LeftSwitch);
+  DigitalInput RightSwitch = new DigitalInput(Constants.RightSwitch);
   double encodermath;
   double Speed = 1;
   boolean Shooting = false;
@@ -38,12 +41,16 @@ public class Turret extends SubsystemBase
   boolean end = false;
   boolean topKick = false;
   boolean Up = false;
+  boolean out = false;
 
   @Override
   public void periodic() 
   {
     encodermath = (m_Turret.getSelectedSensorPosition() - 1024) / 8;
     SmartDashboard.putNumber("Turret Encoder", encodermath);
+    SmartDashboard.putBoolean("RightSwitch", RightSwitch.get());
+    SmartDashboard.putBoolean("LeftSwitch", LeftSwitch.get());
+    SmartDashboard.putNumber("TurretValue", m_Turret.get());
   }
 
   public double getSelectedSensorPosition() 
@@ -56,6 +63,11 @@ public class Turret extends SubsystemBase
     m_Turret.setSelectedSensorPosition(0);
   }
 
+  public void Turn(double rotation)
+  {
+    SetMotor(rotation);
+  }
+ 
   public void Autoturn() 
   {
     // These numbers must be tuned for your Robot! Be careful!
@@ -65,7 +77,8 @@ public class Turret extends SubsystemBase
     double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
 
-    if (tv < 1.0) {
+    if (tv < 1.0) 
+    {
       m_LimelightHasValidTarget = false;
       m_LimelightSteerCommand = 0.0;
       return;
@@ -75,26 +88,60 @@ public class Turret extends SubsystemBase
 
     if (m_LimelightHasValidTarget) 
     {
-      m_Turret.set(m_LimelightSteerCommand);
+        Speed = m_LimelightSteerCommand;
     } 
     else 
     {
-      m_Turret.set(Speed);
+      Speed = 0;
     }
 
+    SetMotor(Speed);
     // Start with proportional steering
     double steer_cmd = tx * TurretMotor;
     m_LimelightSteerCommand = steer_cmd;
   }
 
+  public void SetMotor(double TurretSpeed) 
+  {
+
+  if(TurretSpeed > 0 && !LeftSwitch.get())
+     m_Turret.set(TurretSpeed);
+  
+  
+  else if(TurretSpeed < 0 && !RightSwitch.get()) 
+     m_Turret.set(TurretSpeed);
+
+    else 
+      m_Turret.set(0);
+
+  }
+
+ // public void TurretControl(){
+   // if (LeftSwitch.get()) // If the forward limit switch is pressed, we want to keep the values between -1 and 0
+     //   Speed = Math.min(Speed, 0);
+  //  else if(RightSwitch.get()) // If the reversed limit switch is pressed, we want to keep the values between 0 and 1
+      //  Speed = Math.max(Speed, 0);
+  //  m_Turret.set(Speed);
+ // }
   public void HoodSolenoid() 
   {
     if (Up)
+      TurretSolenoid.set(true);
+    else
+      TurretSolenoid.set(false);
+
+    Up = !Up;
+    done = true;
+    isFinished();
+  }
+  public void TurretSolenoid() 
+  {
+    if (out)
       HoodSolenoid.set(true);
     else
       HoodSolenoid.set(false);
 
-    Up = !Up;
+    out = !out;
     done = true;
     isFinished();
   }
@@ -138,6 +185,7 @@ public class Turret extends SubsystemBase
   public void TurretStop() 
   {
     m_Turret.set(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
   }
 
   public boolean isDone()

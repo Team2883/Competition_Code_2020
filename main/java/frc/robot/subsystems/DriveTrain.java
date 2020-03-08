@@ -79,7 +79,11 @@ public class DriveTrain extends SubsystemBase
   
   public void Drive(double speed, double rotation)
   {
-    m_dDrive.arcadeDrive(speed, rotation * sensitivity);
+    m_dDrive.arcadeDrive(speed, rotation);
+  }
+  public void DriveAuto(double speed, double rotation)
+  {
+    m_dDrive.arcadeDrive(speed, rotation);
   }
 
   public void Shifting()
@@ -162,7 +166,7 @@ public static void AddSensitivity(double sens)
   // Returns the current wheel speeds of the robot.
   public DifferentialDriveWheelSpeeds getWheelSpeeds() 
   {
-    return new DifferentialDriveWheelSpeeds(LeftBack.getSelectedSensorVelocity() / distL * 0.0254, RightBack.getSelectedSensorVelocity() / distR * 0.0254);
+    return new DifferentialDriveWheelSpeeds(LeftBack.getSelectedSensorVelocity() / distL, RightBack.getSelectedSensorVelocity() / distR);
   }
 
   // Resets the odometry to the specified pose.
