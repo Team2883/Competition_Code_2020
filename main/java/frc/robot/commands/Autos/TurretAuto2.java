@@ -13,15 +13,15 @@ import frc.robot.commands.TurretandShooter.TurretVision;
 import frc.robot.subsystems.Turret;
 
 
-public class TurretAuto extends ParallelRaceGroup 
+public class TurretAuto2 extends ParallelRaceGroup 
 {
   /**
    * @param Turret
    */
-  public TurretAuto(Turret m_turret) 
+  public TurretAuto2(double time, Turret m_turret) 
   {
     addCommands(
       new TurretVision(m_turret),
-      new WaitCommand(.6));
+      new WaitCommand(time));
   }
 }

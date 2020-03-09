@@ -13,9 +13,10 @@ import frc.robot.subsystems.DriveTrain;
 
 public class AutoDrive extends CommandBase 
 {
-  private final DriveTrain m_drive;
+  private final DriveTrain m_driveTrain;
   private final double m_distance;
   private final double m_speed;
+  private final double m_rotation;
   double diameter = 6; // 6 inch wheel
   double gearRatio = 28.5; // 26:1 gearbox
   double distR = (2048 / (diameter * 3.14 / gearRatio) );
@@ -26,40 +27,44 @@ public class AutoDrive extends CommandBase
    * @param inches The number of inches the robot will drive
    * @param speed The speed at which the robot will drive
    * @param drive The drive subsystem on which this command will run
+   * @param rotation
    */
-  public AutoDrive(double inches, double speed, DriveTrain drive) 
+  public AutoDrive(double inches, double speed, double rotation, DriveTrain subsystem) 
   {
     m_distance = inches;
     m_speed = speed;
-    m_drive = drive;
+    m_rotation = rotation;
+    m_driveTrain = subsystem;
+
+    addRequirements(m_driveTrain);
   }
 
   @Override
   public void initialize() 
   {
-    m_drive.resetEncoders();
-    m_drive.DriveAuto(0, 0);
+    m_driveTrain.resetEncoders();
+    m_driveTrain.Drive(0, 0);
   }
 
   @Override
   public void execute()
   {
-    m_drive.DriveAuto(m_speed, 0);
+    m_driveTrain.Drive(m_speed, m_rotation);
   }
 
   @Override
   public void end(boolean interrupted) 
   {
-    m_drive.DriveAuto(0, 0);
+    m_driveTrain.Drive(0, 0);
   }
 
   @Override
   public boolean isFinished() 
   {
     if(m_distance > 0)
-      return Math.abs(m_drive.getRightEncoder() / distR) >= m_distance;
+      return Math.abs(m_driveTrain.getRightEncoder() / distR) >= m_distance;
     else if(m_distance < 0)
-      return Math.abs(m_drive.getRightEncoder()/ distR) <= m_distance;
+      return Math.abs(m_driveTrain.getRightEncoder()/ distR) *-1 <= m_distance;
     else 
       return false;
   }

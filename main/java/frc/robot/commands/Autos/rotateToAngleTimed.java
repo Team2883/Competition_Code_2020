@@ -9,19 +9,19 @@ package frc.robot.commands.Autos;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.TurretandShooter.TurretVision;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.DriveTrain;
 
-
-public class TurretAuto extends ParallelRaceGroup 
-{
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
+public class rotateToAngleTimed extends ParallelRaceGroup {
   /**
-   * @param Turret
+   * Creates a new rotateToAngleTimed.
    */
-  public TurretAuto(Turret m_turret) 
+  public rotateToAngleTimed(double time, DriveTrain m_driveTrain) 
   {
     addCommands(
-      new TurretVision(m_turret),
-      new WaitCommand(.6));
+      new RotateToAngle(-115, 1, .65, m_driveTrain),
+      new WaitCommand(time));
   }
 }

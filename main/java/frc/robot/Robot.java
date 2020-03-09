@@ -7,12 +7,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
+//import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Colorings;
+//import frc.robot.subsystems.Colorings;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Harvester;
 import frc.robot.subsystems.Turret;
@@ -36,21 +36,20 @@ public class Robot extends TimedRobot
   public static Turret m_turret;
   public static Harvester m_Harvester;
   public static RobotContainer m_robotContainer;
-  public static Colorings m_Colorings;
+  //public static Colorings m_Colorings;
   private Command m_autonomousCommand;
+  public static double Yaw;
   AHRS ahrs;
   CameraServer server;
-  
+
   @Override
   public void robotInit()
   {
-    //m_Harvester.m_kick.set(0);
     m_robotContainer = new RobotContainer(); 
     ahrs = new AHRS(SerialPort.Port.kUSB);
-    m_Colorings = new Colorings();
-    m_Colorings.setColorTargets();
+    // m_Colorings = new Colorings();
+    // m_Colorings.setColorTargets();
     ahrs.enableLogging(true);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
     server = CameraServer.getInstance();
     server.startAutomaticCapture("cam0",0);
   }
@@ -70,6 +69,7 @@ public class Robot extends TimedRobot
     SmartDashboard.putNumber("IMU_Yaw", ahrs.getYaw());
     SmartDashboard.putNumber("IMU_Pitch", ahrs.getPitch());
     SmartDashboard.putNumber("IMU_Roll", ahrs.getRoll());
+    Yaw = ahrs.getYaw();
 
     /* Display tilt-corrected, Magnetometer-based heading (requires */
     /* magnetometer calibration to be useful) */
@@ -154,6 +154,12 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+   // m_driveTrain.LeftBack.setNeutralMode(NeutralMode.Brake);
+   // m_driveTrain.LeftFront.setNeutralMode(NeutralMode.Brake);
+   // m_driveTrain.RightBack.setNeutralMode(NeutralMode.Brake);
+   // m_driveTrain.RightFront.setNeutralMode(NeutralMode.Brake);
+
     ahrs.zeroYaw();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) 
@@ -182,6 +188,7 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit() 
   {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
     if (m_autonomousCommand != null) 
     {
       m_autonomousCommand.cancel();
@@ -194,48 +201,31 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic() 
   {
-    String gameData;
-    gameData = DriverStation.getInstance().getGameSpecificMessage();
-    if(gameData.length() > 0)
-    {
-      m_Colorings.setColorTargets();
-      switch (gameData.charAt(0))
-      {
-        case 'B' :
-          SmartDashboard.putBoolean("Blue Target", true); // Target
-          SmartDashboard.putBoolean("Green Target", false);
-          SmartDashboard.putBoolean("Red Target", false);
-          SmartDashboard.putBoolean("Yellow Target", false);
-          break;
-        case 'G' :
-          SmartDashboard.putBoolean("Blue Target", false);
-          SmartDashboard.putBoolean("Green Target", true); // Target
-          SmartDashboard.putBoolean("Red Target", false);
-          SmartDashboard.putBoolean("Yellow Target", false);
-          break;
-        case 'R' :
-          SmartDashboard.putBoolean("Blue Target", false);
-          SmartDashboard.putBoolean("Green Target", false);
-          SmartDashboard.putBoolean("Red Target", true); // Target
-          SmartDashboard.putBoolean("Yellow Target", false);
-          break;
-        case 'Y' :
-          SmartDashboard.putBoolean("Blue Target", false);
-          SmartDashboard.putBoolean("Green Target", false);
-          SmartDashboard.putBoolean("Red Target", false);
-          SmartDashboard.putBoolean("Yellow Target", true); // Target
-          break;
-      }
-    }
-    else
-    {
-      //No Target Yet
-      SmartDashboard.putBoolean("Target Found", false);
-      SmartDashboard.putBoolean("Blue Target", false);
-      SmartDashboard.putBoolean("Green Target", false);
-      SmartDashboard.putBoolean("Red Target", false);
-      SmartDashboard.putBoolean("Yellow Target", false);
-    }
+     //String gameData;
+    // gameData = DriverStation.getInstance().getGameSpecificMessage();
+    // if(gameData.length() > 0)
+    // {
+    //   m_Colorings.setColorTargets();
+    //   switch (gameData.charAt(0))
+    //   {
+    //     case 'B' :
+    //       SmartDashboard.putString("Target", "Blue");
+    //       break;
+    //     case 'G' :
+    //       SmartDashboard.putString("Target", "Green");
+    //       break;
+    //     case 'R' :
+    //       SmartDashboard.putString("Target", "Red");
+    //       break;
+    //     case 'Y' :
+    //       SmartDashboard.putString("Target", "Yellow");
+    //       break;
+    //   }
+    // }
+    // else
+    // {
+    //   SmartDashboard.putString("Target", "None");
+    // }
   }
 
   @Override

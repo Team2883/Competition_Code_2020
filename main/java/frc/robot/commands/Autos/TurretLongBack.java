@@ -8,20 +8,20 @@
 package frc.robot.commands.Autos;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.TurretandShooter.TurretVision;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
 
 
-public class TurretAuto extends ParallelRaceGroup 
+public class TurretLongBack extends ParallelRaceGroup 
 {
   /**
-   * @param Turret
+   * Creates a new TurretLongBack.
    */
-  public TurretAuto(Turret m_turret) 
+  public TurretLongBack(Turret m_turret, DriveTrain m_drivetrain) 
   {
     addCommands(
-      new TurretVision(m_turret),
-      new WaitCommand(.6));
+      // new TurretVision(m_turret),
+      new RotateToAngle(-57, 1, .34, m_drivetrain));
   }
 }
