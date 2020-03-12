@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,13 +22,9 @@ public class Turret extends SubsystemBase
 {
   private static final Command VisionDrive = null;
   final public WPI_TalonSRX m_Turret = new WPI_TalonSRX(Constants.TurretMotor);
-  final public WPI_TalonFX m_Shooter1 = new WPI_TalonFX(Constants.ShooterMotor);
-  final public WPI_TalonFX m_Shooter2 = new WPI_TalonFX(Constants.ShooterMotor2);
   final public WPI_TalonSRX m_topKick = new WPI_TalonSRX(Constants.TopKickMotor);
-  public final SpeedControllerGroup m_Shooter = new SpeedControllerGroup(m_Shooter1, m_Shooter2);
   private final Solenoid HoodSolenoid = new Solenoid(Constants.HoodSolenoid);
   private final Solenoid TurretSolenoid = new Solenoid(Constants.TurretSolenoid);
-  //DigitalInput Magencoder = new DigitalInput(Constants.Encoder);
   private boolean m_LimelightHasValidTarget = false;
   private double m_LimelightSteerCommand = 0.0;
   DigitalInput LeftSwitch = new DigitalInput(Constants.LeftSwitch);
@@ -43,11 +38,6 @@ public class Turret extends SubsystemBase
   boolean topKick = false;
   boolean Up = false;
   boolean out = false;
- 
-  public Turret()
-  {
-    m_Shooter2.setInverted(true);
-  }
 
   @Override
   public void periodic() 
@@ -82,7 +72,8 @@ public class Turret extends SubsystemBase
     double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
     double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-
+    
+    SmartDashboard.putNumber("limelightValue", tx);
     if (tv < 1.0) 
     {
       m_LimelightHasValidTarget = false;
@@ -110,11 +101,11 @@ public class Turret extends SubsystemBase
   public void SetMotor(double TurretSpeed) 
   {
 
-  if(TurretSpeed > 0 && !LeftSwitch.get())
+  if(TurretSpeed > 0 && LeftSwitch.get())
      m_Turret.set(TurretSpeed);
   
   
-  else if(TurretSpeed < 0 && !RightSwitch.get()) 
+  else if(TurretSpeed < 0 && RightSwitch.get()) 
      m_Turret.set(TurretSpeed);
 
     else 
@@ -122,13 +113,6 @@ public class Turret extends SubsystemBase
 
   }
 
- // public void TurretControl(){
-   // if (LeftSwitch.get()) // If the forward limit switch is pressed, we want to keep the values between -1 and 0
-     //   Speed = Math.min(Speed, 0);
-  //  else if(RightSwitch.get()) // If the reversed limit switch is pressed, we want to keep the values between 0 and 1
-      //  Speed = Math.max(Speed, 0);
-  //  m_Turret.set(Speed);
- // }
   public void HoodSolenoid() 
   {
     if (Up)
@@ -140,6 +124,7 @@ public class Turret extends SubsystemBase
     done = true;
     isFinished();
   }
+
   public void TurretSolenoid() 
   {
     if (out)
@@ -164,42 +149,12 @@ public class Turret extends SubsystemBase
     isEnd();
   }
 
-  public void ShooterMotorHigh() 
-  {
-    if (Shooting)
-      m_Shooter.set(0);
-    else
-      m_Shooter.set(-1);
-
-    Shooting = !Shooting;
-    done = true;
-    isFinished();
-  }
-  
-  public void ShooterMotorLow() 
-  {
-    if (Shooting)
-      m_Shooter.set(0);
-    else
-      m_Shooter.set(-.85);
-
-    Shooting = !Shooting;
-    done = true;
-    isFinished();
-  }
-
   public void TurretStop() 
   {
     m_Turret.set(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
   }
 
-  public boolean isDone()
-  {
-    
-    return Done;
-  }
-  
   public boolean isEnd()
   {
     return end;

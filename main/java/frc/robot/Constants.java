@@ -8,7 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-
+import imports.*;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -36,7 +36,7 @@ public final class Constants
     public static final int XboxPort1 = 1;
     public static final int Agitator = 1; // A Button
     public static final int AutoTurnButton = 3; // X Button
-    public static final int LowShootButton = 10; // Start Button
+    public static final int PIDShootButton = 4; // Shooter Button(same as highshoot)
     public static final int HighShootButton = 4; // Y Button
     public static final int Hoodsolenoid = 8; // Start Button
     public static final int KickButton = 2; // B Button
@@ -52,11 +52,11 @@ public final class Constants
     //Other Motors
     public static final int Agitate = 12;
     public static final int BottomKickMotor = 18;
-    public static final int ClimbMotor = 4;
+    public static final int ClimbMotor = 4; //  Falcon
     public static final int ColorwheelMotor = 11;
     public static final int HarvesterMotor = 15;
-    public static final int ShooterMotor = 5;
-    public static final int ShooterMotor2 = 14;
+    public static final int ShooterMotor1 = 5; //  Falcon
+    public static final int ShooterMotor2 = 6; //  Falcon
     public static final int TopKickMotor = 10;
     public static final int TurretMotor = 16;
     
@@ -91,13 +91,14 @@ public final class Constants
     public static final int kFeederMotorPort = 5;
 
     public static final double kShooterFreeRPS = 5300;
-    public static final double kShooterTargetRPS = 1;
+    public static final double kShooterTargetRPS = 100;
     public static final double kShooterToleranceRPS = 50;
 
     // These are not real PID gains, and will have to be tuned for your specific robot.
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double kF = 0.009;
 
     // On a real robot the feedforward constants should be empirically determined; these are
     // reasonable guesses.
@@ -116,5 +117,38 @@ public final class Constants
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
 	public static final boolean kGyroReversed = true;
-	public static final String kEncoderDistancePerPulse = "0.000019347";
+    public static final String kEncoderDistancePerPulse = "0.000019347";
+    
+    //Shooter Closed Loop Constants
+    public static final int kTimeoutMs = 30;
+    public static final double kNeutralDeadband = 0.001;
+
+    //  vvv Copied from examples on CTRE github vvv
+    public final static int REMOTE_0 = 0;
+	public final static int REMOTE_1 = 1;
+	/* We allow either a 0 or 1 when selecting a PID Index, where 0 is primary and 1 is auxiliary */
+	public final static int PID_PRIMARY = 0;
+	public final static int PID_TURN = 1;
+	/* Firmware currently supports slots [0, 3] and can be used for either PID Set */
+	public final static int SLOT_0 = 0;
+	public final static int SLOT_1 = 1;
+	public final static int SLOT_2 = 2;
+	public final static int SLOT_3 = 3;
+	/* ---- Named slots, used to clarify code ---- */
+	public final static int kSlot_Distanc = SLOT_0;
+	public final static int kSlot_Turning = SLOT_1;
+	public final static int kSlot_Velocit = SLOT_2;
+    public final static int kSlot_MotProf = SLOT_3;
+    
+    // public final static Gains kGains_Velocit  = new Gains( 0.1, 0.001, 5, 0.09 /*1023.0/20660.0*/,  300,  1.0);//KP, KI, KD, KF, KIzone, MaxOutput
+    public final static Gains kGains_Velocit  = new Gains( 0.06, 0, 0, 0.0468 ,  0,  1.0);//KP, KI, KD, KF, KIzone, MaxOutput
+
+    public final static float TargetSensorValue = 14750;
+
+    //Below is used if you want the value in RPMS. :)
+    //public final static float shooterPercentage = 1.0f;
+    //public final static float shooterFeed = 0.2f;
+    //public final static int shooterTargetRPM = 4250;
+    //public final static double CTREMagicNumber = 600.0;
+   // public final static double shooterFeedForwardMod = 0.10; //Do this in percent.
 }

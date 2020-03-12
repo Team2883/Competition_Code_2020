@@ -27,6 +27,7 @@ public class DriveTrain extends SubsystemBase
 {
   // Code Defined Controls or Variables
   private static final Command StickDrive = null;
+  public static DriveTrain me = null;
   private final Solenoid SpeedControl = new Solenoid(Constants.GearShift);
   AHRS ahrs;
   static double sensitivity = 0.8;
@@ -42,12 +43,12 @@ public class DriveTrain extends SubsystemBase
   //Drivetrain
 /**---------------------------------------------------------------------------------------------- */
   //Left Motors
-  private final WPI_TalonFX LeftBack = new WPI_TalonFX(Constants.LeftBack);
-  private final WPI_TalonFX LeftFront = new WPI_TalonFX(Constants.LeftFront);
+  public final WPI_TalonFX LeftBack = new WPI_TalonFX(Constants.LeftBack);
+  public final WPI_TalonFX LeftFront = new WPI_TalonFX(Constants.LeftFront);
 
   //Right Motors
-  private final WPI_TalonFX RightBack = new WPI_TalonFX(Constants.RightBack);
-  private final WPI_TalonFX RightFront = new WPI_TalonFX(Constants.RightFront);
+  public final WPI_TalonFX RightBack = new WPI_TalonFX(Constants.RightBack);
+  public final WPI_TalonFX RightFront = new WPI_TalonFX(Constants.RightFront);
 
   //Grouping
   public SpeedControllerGroup m_Left = new SpeedControllerGroup(LeftBack, LeftFront);
@@ -56,7 +57,6 @@ public class DriveTrain extends SubsystemBase
   //Chassis
   final public DifferentialDrive m_dDrive = new DifferentialDrive(m_Left, m_Right);
 /**---------------------------------------------------------------------------------------------- */
-
   public DifferentialDriveOdometry m_odometry;
 
   public DriveTrain()
@@ -64,6 +64,17 @@ public class DriveTrain extends SubsystemBase
     ahrs = new AHRS(SerialPort.Port.kOnboard);
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+      //Here To Make Pigeon Readings Work
+/**------------------------------------ */
+if(me == null)
+{
+  me = this;
+}
+else
+{
+  //I break here
+}
+/**------------------------------------ */
   }
 
   @Override
@@ -74,16 +85,17 @@ public class DriveTrain extends SubsystemBase
     
     SmartDashboard.putNumber("Left Falcon Encoder", LeftBack.getSelectedSensorPosition() / distL);
     SmartDashboard.putNumber("Right Falcon Encoder", RightBack.getSelectedSensorPosition() / distR);
-    SmartDashboard.putNumber("sensitivity", GetSensitity());
+    SmartDashboard.putNumber("AHRS angle", ahrs.getYaw());
   }
   
   public void Drive(double speed, double rotation)
   {
     m_dDrive.arcadeDrive(speed, rotation);
   }
-  public void DriveAuto(double speed, double rotation)
+  
+  public void GetYaw()
   {
-    m_dDrive.arcadeDrive(speed, rotation);
+    ahrs.getYaw();
   }
 
   public void Shifting()
@@ -120,42 +132,6 @@ public class DriveTrain extends SubsystemBase
     LeftBack.setSelectedSensorPosition(0);
     RightBack.setSelectedSensorPosition(0);
   }
-
-  //Sensitivity Methods
-/**------------------------------------------- */
-public static void AddSensitivity(double sens)
-  {
-    sensitivity += sens;
-    if(sensitivity > 1)
-    {
-      sensitivity = 1.0;
-    }
-    if(sensitivity < .3)
-    {
-      sensitivity = .3;
-    }
-  }
-
-  public static double GetSensitity()
-  {
-    return sensitivity;
-  }
-
-  public void sensUP()
-  {
-    DriveTrain.AddSensitivity(0.1);
-  }
-
-  public void sensDN()
-  {
-    DriveTrain.AddSensitivity(-0.1);
-  }
-
-  public void SensReset()
-  {
-    sensitivity = 0.8;
-  }
-
   
   // Returns the position of the robot on the field.
   public Pose2d getPose() 
@@ -214,7 +190,8 @@ public static void AddSensitivity(double sens)
   // Returns the robot's heading in degrees, from -180 to 180
   public double getHeading() 
   {
-    return Math.IEEEremainder(ahrs.getAngle(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
+    return ahrs.getYaw();
+   // Math.IEEEremainder(ahrs.getYaw(), 360) * (Constants.kGyroReversed ? -1.0 : 1.0);
   }
 
   // Returns the turn rate of the robot, in degrees per second

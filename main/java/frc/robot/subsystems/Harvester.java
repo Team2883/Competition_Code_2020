@@ -57,18 +57,20 @@ public class Harvester extends SubsystemBase
     if (bottomKick)
       m_kick.set(0);
     else
-      m_kick.set(.5);
+      m_kick.set(.9);
       
     bottomKick = !bottomKick;
     done = true;
     isFinished();
   }
+
+  
   public void bottomKickReverse() 
   {
     if (bottomKickReverse)
       m_kick.set(0);
     else
-      m_kick.set(-.5);
+      m_kick.set(-.48);
       
     bottomKick = !bottomKick;
     done = true;

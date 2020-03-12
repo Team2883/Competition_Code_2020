@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.TurretandShooter.ShooterMotorHigh;
 //import frc.robot.subsystems.Colorings;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Harvester;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.Turret;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -22,6 +24,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+
 
 
 /**
@@ -36,6 +39,7 @@ public class Robot extends TimedRobot
   public static Turret m_turret;
   public static Harvester m_Harvester;
   public static RobotContainer m_robotContainer;
+  public static ShooterSubsystem m_shooter;
   //public static Colorings m_Colorings;
   private Command m_autonomousCommand;
   public static double Yaw;
@@ -52,6 +56,9 @@ public class Robot extends TimedRobot
     ahrs.enableLogging(true);
     server = CameraServer.getInstance();
     server.startAutomaticCapture("cam0",0);
+
+    //Shooter Initialization
+    m_shooter  = m_robotContainer.m_shooter;
   }
 
   /**
@@ -166,6 +173,7 @@ public class Robot extends TimedRobot
     {
       m_autonomousCommand.schedule();
     }
+    m_shooter.InitLoop();
   }
 
   @Override
@@ -183,6 +191,7 @@ public class Robot extends TimedRobot
         m_driveTrain.m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(m_driveTrain.getHeading()));
       }
     }
+    m_shooter.HoldConstant();
   }
 
   @Override
@@ -226,6 +235,15 @@ public class Robot extends TimedRobot
     // {
     //   SmartDashboard.putString("Target", "None");
     // }
+
+    //Shooter Loop
+    if(m_shooter != null && m_robotContainer.ToggleLoop()){
+      SmartDashboard.putString("ShooterActive", "Yes");
+      m_shooter.HoldConstant();
+    }
+    else{
+      SmartDashboard.putString("ShooterActive", "No");
+    }
   }
 
   @Override

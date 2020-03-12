@@ -34,7 +34,7 @@ public class ManualTurret extends CommandBase
   @Override
   public void execute() 
   { 
-    m_turret.SetMotor(m_rotation.getAsDouble());
+    m_turret.SetMotor(-m_rotation.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

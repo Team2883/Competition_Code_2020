@@ -18,12 +18,12 @@ public class ClimbStop extends CommandBase
     @Override
     public void initialize()
     {
-        
+     m_climber.m_climb.set(0);   
     }
     
     @Override
     public void execute() {
-        m_climber.m_climb.set(0);
+        
     }
     @Override
     public boolean isFinished() 

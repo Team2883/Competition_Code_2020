@@ -27,15 +27,7 @@ public class SimpleAuto extends SequentialCommandGroup
   public SimpleAuto(Harvester m_harvester, Turret m_turret, DriveTrain m_driveTrain) 
   {
     addCommands(
-      new WaitCommand(3),
-      new TurretAuto(m_turret),
-      new ShooterMotorHigh(m_turret),
-      new WaitCommand(1),
-      new TurretStop(m_turret),
-      new Kick(m_harvester),
-      new WaitCommand(3),
-      new Kick(m_harvester),
-      new ShooterMotorHigh(m_turret),
-      new AutoDrive(35, -1, 0, m_driveTrain));
+      new WaitCommand(15)
+    );
   }
 }

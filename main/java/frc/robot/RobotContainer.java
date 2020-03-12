@@ -36,7 +36,6 @@ import frc.robot.commands.HarvestandFeed.Kick;
 import frc.robot.commands.HarvestandFeed.ReverseAgitate;
 import frc.robot.commands.TurretandShooter.ManualTurret;
 import frc.robot.commands.TurretandShooter.ShooterMotorHigh;
-import frc.robot.commands.TurretandShooter.ShooterMotorLow;
 import frc.robot.commands.TurretandShooter.TurretSolenoid;
 import frc.robot.commands.TurretandShooter.TurretStop;
 import frc.robot.commands.TurretandShooter.TurretVision;
@@ -47,6 +46,7 @@ import frc.robot.subsystems.Colorings;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Harvester;
 import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.ShooterSubsystem;
 
 
 /**
@@ -57,8 +57,12 @@ import frc.robot.subsystems.Turret;
  */
 public class RobotContainer 
 {
+  public boolean isShooterPressed = false;
   public final XboxController stick = new XboxController(Constants.XboxPort);
   public final XboxController stick1 = new XboxController(Constants.XboxPort1);
+  final JoystickButton PIDShootButton = new JoystickButton(stick1, Constants.PIDShootButton);
+  private boolean lastShooterVal = false;
+  public boolean Toggler = false;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   // The robot's subsystems and commands are defined here...
@@ -69,6 +73,7 @@ public class RobotContainer
   private final DriveTrain m_driveTrain = new DriveTrain();
   private final Harvester m_harvester = new Harvester();
   private final Turret m_turret = new Turret();
+  public final ShooterSubsystem m_shooter = new ShooterSubsystem();
  
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -132,9 +137,9 @@ public class RobotContainer
     final JoystickButton HighShootButton = new JoystickButton(stick1, Constants.HighShootButton);
     final JoystickButton HoodSolenoidButton = new JoystickButton(stick1, Constants.Hoodsolenoid);
     final JoystickButton kickbutton = new JoystickButton(stick1, Constants.KickButton);
-    final JoystickButton LowShootButton = new JoystickButton(stick1, Constants.LowShootButton);
     final JoystickButton ReverseAgitate = new JoystickButton(stick1, Constants.ReverseAgitate);
     final JoystickButton TurretSolenoidButton = new JoystickButton(stick1, Constants.TurretSolenoidButton);
+    
 
 
     ClimbReverseButton.whileHeld(new ClimbReverse(m_climber));
@@ -158,10 +163,10 @@ public class RobotContainer
     ReverseAgitate.whileHeld(new ReverseAgitate(m_agitator));
     ReverseAgitate.whenReleased(new AgitatorStop(m_agitator));
     TurretSolenoidButton.whenPressed(new TurretSolenoid(m_turret));
- //new JoystickButton(stick1, Button.kBumperLeft.value)
-   // .whenPressed(new InstantCommand(m_shooter::enable, m_shooter));
-//new JoystickButton(stick1, Button.kBumperRight.value)
-  //  .whenPressed(new InstantCommand(m_shooter::disable, m_shooter));
+ new JoystickButton(stick1, Button.kBumperLeft.value)
+    .whenPressed(new InstantCommand(m_shooter::enable, m_shooter));
+new JoystickButton(stick1, Button.kBumperRight.value)
+    .whenPressed(new InstantCommand(m_shooter::disable, m_shooter));
   }
 
   /**
@@ -183,4 +188,27 @@ public class RobotContainer
   {
     return stick1;
   }
+
+  public boolean ToggleLoop(){
+        //Set current button value;
+        isShooterPressed = PIDShootButton.get();
+
+        //if value has changed
+        if(lastShooterVal != isShooterPressed){
+          lastShooterVal = isShooterPressed;
+          //if we are currently pressing it
+          if(isShooterPressed == true){
+            Toggler = !Toggler;
+          //tell shooter to initialize
+            if(Toggler == true){
+              m_shooter.InitLoop();
+            }
+            else{
+              m_shooter.EndConst();
+            }
+          }
+        }
+      return Toggler;
+  }
+
 }

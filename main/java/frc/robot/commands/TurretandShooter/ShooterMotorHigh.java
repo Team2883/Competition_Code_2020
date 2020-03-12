@@ -26,7 +26,6 @@ public class ShooterMotorHigh extends CommandBase
   @Override
   public void initialize() 
   {
-    m_turret.ShooterMotorHigh();
     m_turret.topKick();
   }
 

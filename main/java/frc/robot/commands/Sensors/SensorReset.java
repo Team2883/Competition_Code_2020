@@ -27,7 +27,6 @@ public class SensorReset extends CommandBase
   public void initialize() 
   {
     m_driveTrain.resetEncoder();
-    m_driveTrain.SensReset();
   }
   
   @Override

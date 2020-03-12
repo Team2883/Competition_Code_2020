@@ -15,7 +15,9 @@ import frc.robot.commands.HarvestandFeed.HarvestStop;
 import frc.robot.commands.HarvestandFeed.HarvestUpandDown;
 import frc.robot.commands.HarvestandFeed.Kick;
 import frc.robot.commands.TurretandShooter.ShooterMotorHigh;
+import frc.robot.commands.TurretandShooter.TurretSolenoid;
 import frc.robot.commands.TurretandShooter.TurretStop;
+import frc.robot.commands.TurretandShooter.hoodSolenoid;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.Harvester;
@@ -45,15 +47,17 @@ public class Trench90 extends SequentialCommandGroup
     new ShooterMotorHigh(m_turret),
     new TurretStop(m_turret),
 
-    new RotateToAngle(-84, 1, .34, m_driveTrain),
+    //new RotateToAngle(-84, 1, .34, m_driveTrain),
     new HarvestUpandDown(m_harvester),
     new Harvest(m_harvester),
-    new AutoDrive(180, -1, -.1, m_driveTrain),
+    new hoodSolenoid(m_turret),
+    new TurretSolenoid(m_turret),
+    new AutoDrive(200, -1, -.1, m_driveTrain),
     new HarvestUpandDown(m_harvester),
-    new TurretLongBack(m_turret, m_driveTrain),
+    //new TurretLongBack(m_turret, m_driveTrain),
     new HarvestStop(m_harvester),
     new TurretStop(m_turret));
-   // new AutoDrive(25, 1, 0, m_driveTrain),
-    //new TurretAuto(m_turret));
+    //new AutoDrive(25, 1, 0, m_driveTrain),
+    // new TurretAuto(m_turret));
     }
 }
